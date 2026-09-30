@@ -1,0 +1,7 @@
+{% extends "commun/base.html" %}
+{% block titre %}Erreur serveur{% endblock %}
+{% block contenu %}
+<h1>Une erreur est survenue</h1>
+<p>Desole, quelque chose s'est mal passe. Merci de reessayer dans un instant.</p>
+<a class="bouton" href="{{ url_for('public.accueil') }}">Retour a l'accueil</a>
+{% endblock %}

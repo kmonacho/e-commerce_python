@@ -1,0 +1,70 @@
+{% extends "commun/base.html" %}
+{% block titre %}Administration - Modele de chaussure{% endblock %}
+{% block contenu %}
+<h1>{{ 'Modifier' if chaussure else 'Ajouter' }} un modele de chaussure</h1>
+{% include "admin/menu.html" %}
+
+<div class="formulaire large">
+    <form action="{{ url_for('admin.modifier_chaussure', chaussure_id=chaussure.id) if chaussure else url_for('admin.nouvelle_chaussure') }}" method="post">
+        <div class="champ">
+            <label for="modele">Nom du modele</label>
+            <input type="text" id="modele" name="modele" required value="{{ chaussure.modele if chaussure else '' }}">
+        </div>
+
+        <div class="champ">
+            <label for="marque_id">Marque</label>
+            <select id="marque_id" name="marque_id" required>
+                {% for m in marques %}
+                    <option value="{{ m.id }}" {{ 'selected' if chaussure and chaussure.marque_id == m.id else '' }}>{{ m.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="champ">
+            <label for="genre">Genre</label>
+            <select id="genre" name="genre" required>
+                {% for g in genres %}
+                    <option value="{{ g }}" {{ 'selected' if chaussure and chaussure.genre == g else '' }}>{{ g }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="champ">
+            <label for="collection_id">Collection</label>
+            <select id="collection_id" name="collection_id">
+                {% for col in collections %}
+                    <option value="{{ col.id }}" {{ 'selected' if chaussure and chaussure.collection_id == col.id else '' }}>{{ col.nom }}</option>
+                {% endfor %}
+            </select>
+            <div class="aide">
+                Une nouvelle chaussure est initialisee sur la collection "Aucune" par defaut.
+                <a href="{{ url_for('admin.gerer_collections') }}">Ajouter une nouvelle collection</a>.
+            </div>
+        </div>
+
+        <div class="champ">
+            <label for="date_sortie">Date de sortie</label>
+            <input type="date" id="date_sortie" name="date_sortie"
+                   value="{{ chaussure.date_sortie if chaussure and chaussure.date_sortie else '' }}">
+        </div>
+
+        <div class="champ">
+            <label for="prix">Prix (CHF)</label>
+            <input type="number" id="prix" name="prix" step="0.05" min="0" required
+                   value="{{ chaussure.prix if chaussure else '' }}">
+        </div>
+
+        <div class="champ">
+            <label for="image_url">URL de l'image (ex : images/monmodele.jpg)</label>
+            <input type="text" id="image_url" name="image_url" value="{{ chaussure.image_url if chaussure else '' }}">
+        </div>
+
+        <div class="champ">
+            <label for="description">Description</label>
+            <textarea id="description" name="description">{{ chaussure.description if chaussure else '' }}</textarea>
+        </div>
+
+        <button type="submit" class="bouton">Enregistrer</button>
+    </form>
+</div>
+{% endblock %}

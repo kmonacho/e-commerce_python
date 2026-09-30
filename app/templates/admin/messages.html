@@ -1,0 +1,30 @@
+{% extends "commun/base.html" %}
+{% block titre %}Administration - Messages{% endblock %}
+{% block contenu %}
+<h1>Messages de contact</h1>
+{% include "admin/menu.html" %}
+
+<table class="tableau-donnees">
+    <thead><tr><th>De</th><th>Email</th><th>Sujet</th><th>Message</th><th>Date</th><th>Statut</th></tr></thead>
+    <tbody>
+        {% for m in messages %}
+            <tr style="{{ '' if m.lu else 'font-weight:700;' }}">
+                <td>{{ m.nom }}</td>
+                <td>{{ m.email }}</td>
+                <td>{{ m.sujet }}</td>
+                <td style="max-width:320px;">{{ m.message }}</td>
+                <td>{{ m.date_envoi.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>
+                    {% if m.lu %}
+                        <span class="statut PAYEE">Lu</span>
+                    {% else %}
+                        <a class="bouton petit secondaire" href="{{ url_for('admin.marquer_message_lu', message_id=m.id) }}">Marquer comme lu</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">Aucun message recu.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

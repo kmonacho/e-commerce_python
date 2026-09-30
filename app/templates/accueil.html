@@ -1,0 +1,27 @@
+{% extends "commun/base.html" %}
+{% block titre %}Accueil - ShoeBoutique{% endblock %}
+{% block contenu %}
+<section class="banniere">
+    <h1>Trouvez la paire parfaite</h1>
+    <p>Chaussures homme, femme et unisexe des plus grandes marques, livrees chez vous.</p>
+</section>
+
+<h2>Notre selection</h2>
+<div class="grille-produits">
+    {% for c in chaussures %}
+        <a class="carte-produit" href="{{ url_for('public.detail_chaussure', chaussure_id=c.id) }}">
+            <div class="image-produit" {% if c.image_url %}style="background-image:url('{{ url_for('static', filename=c.image_url) }}')"{% endif %}>
+                {% if not c.image_url %}Image non disponible{% endif %}
+            </div>
+            <div class="contenu">
+                {% if c.nom_collection != 'Aucune' %}<span class="badge-collection">{{ c.nom_collection }}</span>{% endif %}
+                <span class="marque">{{ c.nom_marque }}</span>
+                <span class="modele">{{ c.modele }}</span>
+                <span class="prix">CHF {{ "%.2f"|format(c.prix) }}</span>
+            </div>
+        </a>
+    {% else %}
+        <p>Aucun modele disponible pour le moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}

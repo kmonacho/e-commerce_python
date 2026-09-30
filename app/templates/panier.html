@@ -1,0 +1,31 @@
+{% extends "commun/base.html" %}
+{% block titre %}Mon panier - ShoeBoutique{% endblock %}
+{% block contenu %}
+<h1>Mon panier</h1>
+
+{% if items %}
+    {% for item in items %}
+        <div class="ligne-panier">
+            <div class="details">
+                <strong>{{ item.nom_marque }} &mdash; {{ item.modele }}</strong>
+                <span>Taille US {{ item.taille_us }} / FR {{ item.taille_fr }} &middot; Quantite : {{ item.quantite }}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:1.2rem;">
+                <span>CHF {{ "%.2f"|format(item.sous_total) }}</span>
+                <form action="{{ url_for('panier.supprimer_du_panier') }}" method="post">
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <button type="submit" class="bouton danger petit">Retirer</button>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="total-panier">Total : CHF {{ "%.2f"|format(total) }}</div>
+
+    <form action="{{ url_for('commande.creer_commande') }}" method="post" style="text-align:right;">
+        <button type="submit" class="bouton">Passer la commande</button>
+    </form>
+{% else %}
+    <p>Votre panier est vide. <a href="{{ url_for('public.accueil') }}" style="color:var(--couleur-accent); font-weight:600;">Continuer mes achats</a></p>
+{% endif %}
+{% endblock %}

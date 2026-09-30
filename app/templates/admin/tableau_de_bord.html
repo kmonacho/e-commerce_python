@@ -1,0 +1,13 @@
+{% extends "commun/base.html" %}
+{% block titre %}Administration - Tableau de bord{% endblock %}
+{% block contenu %}
+<h1>Tableau de bord administrateur</h1>
+{% include "admin/menu.html" %}
+
+<div class="grille-tableau-bord">
+    <div class="carte-stat"><div class="valeur">{{ nb_chaussures }}</div><div class="libelle">Modeles de chaussures</div></div>
+    <div class="carte-stat"><div class="valeur">{{ nb_commandes }}</div><div class="libelle">Commandes</div></div>
+    <div class="carte-stat"><div class="valeur">{{ nb_partenaires }}</div><div class="libelle">Partenaires</div></div>
+    <div class="carte-stat"><div class="valeur">{{ nb_messages }}</div><div class="libelle">Messages de contact</div></div>
+</div>
+{% endblock %}

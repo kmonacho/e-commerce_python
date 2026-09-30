@@ -1,0 +1,48 @@
+{% extends "commun/base.html" %}
+{% block titre %}Administration - Partenaires{% endblock %}
+{% block contenu %}
+<h1>Gestion des partenaires</h1>
+{% include "admin/menu.html" %}
+
+<table class="tableau-donnees" style="margin-bottom:2rem;">
+    <thead><tr><th>Nom</th><th>Description</th><th>Site web</th><th>Actions</th></tr></thead>
+    <tbody>
+        {% for p in partenaires %}
+            <tr>
+                <td>{{ p.nom }}</td>
+                <td>{{ p.description }}</td>
+                <td>{% if p.site_web %}<a href="{{ p.site_web }}" target="_blank" rel="noopener">{{ p.site_web }}</a>{% endif %}</td>
+                <td>
+                    <a class="bouton petit danger" href="{{ url_for('admin.supprimer_partenaire', partenaire_id=p.id) }}"
+                       onclick="return confirm('Supprimer ce partenaire ?');">Supprimer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">Aucun partenaire enregistre.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Ajouter un partenaire</h2>
+<div class="formulaire">
+    <form action="{{ url_for('admin.gerer_partenaires') }}" method="post">
+        <div class="champ">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" required>
+        </div>
+        <div class="champ">
+            <label for="description">Description</label>
+            <textarea id="description" name="description"></textarea>
+        </div>
+        <div class="champ">
+            <label for="logo_url">URL du logo</label>
+            <input type="text" id="logo_url" name="logo_url">
+        </div>
+        <div class="champ">
+            <label for="site_web">Site web</label>
+            <input type="text" id="site_web" name="site_web" placeholder="https://...">
+        </div>
+        <button type="submit" class="bouton" style="width:100%;">Ajouter</button>
+    </form>
+</div>
+{% endblock %}

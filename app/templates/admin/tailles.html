@@ -1,0 +1,53 @@
+{% extends "commun/base.html" %}
+{% block titre %}Administration - Tailles{% endblock %}
+{% block contenu %}
+<h1>Tailles &mdash; {{ chaussure.modele }}</h1>
+{% include "admin/menu.html" %}
+
+<table class="tableau-donnees" style="margin-bottom:2rem;">
+    <thead><tr><th>Taille US</th><th>Taille FR</th><th>Stock</th><th>Actions</th></tr></thead>
+    <tbody>
+        {% for t in chaussure.tailles %}
+            <tr>
+                <td>{{ t.taille_us }}</td>
+                <td>{{ t.taille_fr }}</td>
+                <td>
+                    <form action="{{ url_for('admin.modifier_stock_taille', taille_id=t.id) }}" method="post" style="display:flex; gap:.4rem;">
+                        <input type="hidden" name="chaussure_id" value="{{ chaussure.id }}">
+                        <input type="number" name="stock" value="{{ t.stock }}" min="0" style="width:80px;">
+                        <button type="submit" class="bouton petit secondaire">Mettre a jour</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="{{ url_for('admin.supprimer_taille', taille_id=t.id) }}" method="post"
+                          onsubmit="return confirm('Supprimer cette taille ?');">
+                        <input type="hidden" name="chaussure_id" value="{{ chaussure.id }}">
+                        <button type="submit" class="bouton petit danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">Aucune taille enregistree pour ce modele.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Ajouter une taille</h2>
+<div class="formulaire">
+    <form action="{{ url_for('admin.ajouter_taille', chaussure_id=chaussure.id) }}" method="post">
+        <div class="champ">
+            <label for="taille_us">Taille US</label>
+            <input type="number" id="taille_us" name="taille_us" step="0.5" required>
+        </div>
+        <div class="champ">
+            <label for="taille_fr">Taille FR</label>
+            <input type="number" id="taille_fr" name="taille_fr" step="0.5" required>
+        </div>
+        <div class="champ">
+            <label for="stock">Stock initial</label>
+            <input type="number" id="stock" name="stock" min="0" value="0" required>
+        </div>
+        <button type="submit" class="bouton" style="width:100%;">Ajouter la taille</button>
+    </form>
+</div>
+{% endblock %}

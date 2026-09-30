@@ -1,0 +1,42 @@
+{% extends "commun/base.html" %}
+{% block titre %}Mes commandes - ShoeBoutique{% endblock %}
+{% block contenu %}
+<h1>Mes commandes</h1>
+
+{% if not commandes %}
+    <p>Vous n'avez pas encore passe de commande.</p>
+{% endif %}
+
+{% for cmd in commandes %}
+    <table class="tableau-donnees" style="margin-bottom:1.5rem;">
+        <thead>
+            <tr>
+                <th colspan="3">
+                    Commande #{{ cmd.id }} &mdash; {{ cmd.date_commande.strftime('%d/%m/%Y %H:%M') }}
+                    <span class="statut {{ cmd.statut }}" style="margin-left:.6rem;">{{ cmd.statut }}</span>
+                </th>
+            </tr>
+            <tr><th>Modele</th><th>Taille</th><th>Quantite / Prix</th></tr>
+        </thead>
+        <tbody>
+            {% for l in cmd.lignes %}
+                <tr>
+                    <td>{{ l.modele }}</td>
+                    <td>US {{ l.taille_us }} / FR {{ l.taille_fr }}</td>
+                    <td>x{{ l.quantite }} &mdash; CHF {{ "%.2f"|format(l.prix_unitaire * l.quantite) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin:-1rem 0 2rem;">
+        <strong>Total : CHF {{ "%.2f"|format(cmd.total) }}</strong>
+        <div style="display:flex; gap:.6rem;">
+            {% if cmd.statut == 'EN_ATTENTE' %}
+                <a class="bouton petit" href="{{ url_for('paiement.formulaire_paiement', commande_id=cmd.id) }}">Payer</a>
+                <a class="bouton danger petit" href="{{ url_for('commande.annuler_commande', commande_id=cmd.id) }}"
+                   onclick="return confirm('Annuler cette commande ?');">Annuler</a>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}

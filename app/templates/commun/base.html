@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titre %}ShoeBoutique{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="entete">
+    <a class="logo" href="{{ url_for('public.accueil') }}">Shoe<span>Boutique</span></a>
+    <nav class="principale">
+        <ul>
+            <li><a href="{{ url_for('public.accueil') }}">Accueil</a></li>
+            <li><a href="{{ url_for('public.femmes') }}">Femmes</a></li>
+            <li><a href="{{ url_for('public.hommes') }}">Hommes</a></li>
+            <li><a href="{{ url_for('public.partenaires') }}">Partenaires</a></li>
+            <li><a href="{{ url_for('public.contact') }}">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="zone-compte">
+        {% if session.get('utilisateur_id') %}
+            {% if session.get('role') == 'ADMIN' %}
+                <a href="{{ url_for('admin.tableau_de_bord') }}">Administration</a>
+            {% else %}
+                <a href="{{ url_for('panier.voir_panier') }}">Panier</a>
+                <a href="{{ url_for('commande.mes_commandes') }}">Mes commandes</a>
+            {% endif %}
+            <span>Bonjour {{ session.get('prenom') }}</span>
+            <a class="bouton-connexion" href="{{ url_for('auth.deconnexion') }}">Se deconnecter</a>
+        {% else %}
+            <a class="bouton-connexion" href="{{ url_for('auth.connexion') }}">Se connecter</a>
+        {% endif %}
+    </div>
+</header>
+
+<main class="conteneur">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for categorie, texte in messages %}
+            <div class="alerte {{ categorie }}">{{ texte }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    {% block contenu %}{% endblock %}
+</main>
+
+<footer class="pied">
+    &copy; 2026 ShoeBoutique &mdash; Projet pedagogique Flask / MySQL
+</footer>
+
+{% if not request.cookies.get('cookies_acceptes') %}
+<div class="bandeau-cookies" id="bandeauCookies">
+    <p>Ce site utilise des cookies pour ameliorer votre experience (session, panier). Acceptez-vous les cookies ?</p>
+    <div class="actions">
+        <a href="{{ url_for('auth.api_cookies', choix='accepter') }}" class="bouton petit">Accepter</a>
+        <a href="{{ url_for('auth.api_cookies', choix='refuser') }}" class="bouton petit secondaire">Refuser</a>
+    </div>
+</div>
+{% endif %}
+
+{% block script %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends "commun/base.html" %}
+{% block titre %}{{ chaussure.modele }} - ShoeBoutique{% endblock %}
+{% block contenu %}
+<div style="display:flex; gap:2.5rem; flex-wrap:wrap;">
+    <div class="image-produit" style="flex:1; min-width:280px; max-width:420px; aspect-ratio:1;
+        {% if chaussure.image_url %}background-image:url('{{ url_for('static', filename=chaussure.image_url) }}'){% endif %}">
+        {% if not chaussure.image_url %}Image non disponible{% endif %}
+    </div>
+
+    <div style="flex:1; min-width:280px;">
+        {% if chaussure.nom_collection != 'Aucune' %}<span class="badge-collection">{{ chaussure.nom_collection }}</span>{% endif %}
+        <p class="marque" style="font-size:.9rem;">{{ chaussure.nom_marque }}</p>
+        <h1>{{ chaussure.modele }}</h1>
+        <p class="prix" style="font-size:1.6rem;">CHF {{ "%.2f"|format(chaussure.prix) }}</p>
+        <p>{{ chaussure.description }}</p>
+        {% if chaussure.date_sortie %}<p class="sous-titre">Sortie le {{ chaussure.date_sortie.strftime('%d/%m/%Y') }}</p>{% endif %}
+
+        <form action="{{ url_for('panier.ajouter_au_panier') }}" method="post">
+            <div class="champ">
+                <label for="selectTaille">Choisissez une taille</label>
+                <select id="selectTaille" name="taille_id" required>
+                    <option value="" disabled selected>-- Selectionner --</option>
+                    {% for t in chaussure.tailles %}
+                        <option value="{{ t.id }}" {{ 'disabled' if t.stock == 0 else '' }}>
+                            US {{ t.taille_us }} / FR {{ t.taille_fr }} &mdash;
+                            {% if t.stock == 0 %}Rupture de stock{% else %}{{ t.stock }} en stock{% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="champ">
+                <label for="quantite">Quantite</label>
+                <input type="number" id="quantite" name="quantite" value="1" min="1" max="10">
+            </div>
+            <button type="submit" class="bouton">Ajouter au panier</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

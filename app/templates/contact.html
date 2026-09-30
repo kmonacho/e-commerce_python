@@ -1,0 +1,30 @@
+{% extends "commun/base.html" %}
+{% block titre %}Contact - ShoeBoutique{% endblock %}
+{% block contenu %}
+<h1>Nous contacter</h1>
+<p class="sous-titre">Une question ? Ecrivez-nous, notre equipe vous repond rapidement.</p>
+
+<div class="formulaire">
+    {% if erreur %}<div class="alerte erreur">{{ erreur }}</div>{% endif %}
+
+    <form action="{{ url_for('public.contact') }}" method="post">
+        <div class="champ">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" required value="{{ nom or '' }}">
+        </div>
+        <div class="champ">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required value="{{ email or '' }}">
+        </div>
+        <div class="champ">
+            <label for="sujet">Sujet</label>
+            <input type="text" id="sujet" name="sujet" value="{{ sujet or '' }}">
+        </div>
+        <div class="champ">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required>{{ message or '' }}</textarea>
+        </div>
+        <button type="submit" class="bouton">Envoyer le message</button>
+    </form>
+</div>
+{% endblock %}

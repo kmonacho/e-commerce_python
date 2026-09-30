@@ -1,0 +1,96 @@
+{% extends "commun/base.html" %}
+{% block titre %}Inscription - ShoeBoutique{% endblock %}
+{% block contenu %}
+<h1>Creer un compte</h1>
+<p class="sous-titre">Rejoignez ShoeBoutique en quelques secondes.</p>
+
+<div class="formulaire">
+    {% if erreur %}<div class="alerte erreur">{{ erreur }}</div>{% endif %}
+
+    <form action="{{ url_for('auth.inscription') }}" method="post" id="formInscription">
+        <div class="champ">
+            <label for="prenom">Prenom</label>
+            <input type="text" id="prenom" name="prenom" required value="{{ prenom or '' }}">
+        </div>
+        <div class="champ">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" required value="{{ nom or '' }}">
+        </div>
+        <div class="champ">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required value="{{ email or '' }}">
+        </div>
+        <div class="champ">
+            <label for="mot_de_passe">Mot de passe</label>
+            <input type="password" id="mot_de_passe" name="mot_de_passe" required minlength="8">
+            <div class="force-mdp">
+                <div class="barre"><span id="barreForce"></span></div>
+                <div class="libelle" id="libelleForce">Au moins 8 caracteres</div>
+                <ul class="criteres">
+                    <li id="critereLongueur">8 caracteres minimum</li>
+                    <li id="critereChiffre">Au moins un chiffre</li>
+                    <li id="critereMajuscule">Au moins une majuscule</li>
+                    <li id="critereSpecial">Au moins un caractere special</li>
+                </ul>
+            </div>
+        </div>
+        <div class="champ">
+            <label for="confirmation">Confirmer le mot de passe</label>
+            <input type="password" id="confirmation" name="confirmation" required minlength="8">
+        </div>
+        <div class="champ">
+            <label class="case-a-cocher">
+                <input type="checkbox" name="accepte_cookies">
+                J'accepte que ce site utilise des cookies (session, panier).
+            </label>
+        </div>
+        <button type="submit" class="bouton" style="width:100%;">Creer mon compte</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+// Evalue localement la force du mot de passe (memes regles que cote serveur :
+// app.security.evaluer_force) pour un retour visuel immediat, sans requete reseau.
+const champMdp = document.getElementById('motDePasse') || document.getElementById('mot_de_passe');
+const barre = document.getElementById('barreForce');
+const libelle = document.getElementById('libelleForce');
+const couleurs = ['#e94560', '#e94560', '#f0ad4e', '#5cb85c', '#2e7d32'];
+const libelles = ['Trop court', 'Faible', 'Moyen', 'Fort', 'Tres fort'];
+
+function majCritere(id, ok) {
+    document.getElementById(id).classList.toggle('ok', ok);
+}
+
+champMdp.addEventListener('input', function () {
+    const val = champMdp.value;
+    const longueurOk = val.length >= 8;
+    const chiffreOk = /[0-9]/.test(val);
+    const majusculeOk = /[A-Z]/.test(val);
+    const specialOk = /[^a-zA-Z0-9]/.test(val);
+
+    majCritere('critereLongueur', longueurOk);
+    majCritere('critereChiffre', chiffreOk);
+    majCritere('critereMajuscule', majusculeOk);
+    majCritere('critereSpecial', specialOk);
+
+    if (!longueurOk) {
+        barre.style.width = '10%';
+        barre.style.background = couleurs[0];
+        libelle.textContent = libelles[0];
+        libelle.style.color = couleurs[0];
+        return;
+    }
+    let score = 0;
+    if (chiffreOk) score++;
+    if (majusculeOk) score++;
+    if (specialOk) score++;
+
+    barre.style.width = (25 + score * 25) + '%';
+    barre.style.background = couleurs[score + 1];
+    libelle.textContent = libelles[score + 1];
+    libelle.style.color = couleurs[score + 1];
+});
+</script>
+{% endblock %}

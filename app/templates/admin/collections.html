@@ -1,0 +1,26 @@
+{% extends "commun/base.html" %}
+{% block titre %}Administration - Collections{% endblock %}
+{% block contenu %}
+<h1>Gestion des collections</h1>
+{% include "admin/menu.html" %}
+
+<table class="tableau-donnees" style="margin-bottom:2rem;">
+    <thead><tr><th>Nom de la collection</th></tr></thead>
+    <tbody>
+        {% for col in collections %}
+            <tr><td>{{ col.nom }}</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Ajouter une nouvelle collection</h2>
+<div class="formulaire">
+    <form action="{{ url_for('admin.gerer_collections') }}" method="post">
+        <div class="champ">
+            <label for="nom">Nom de la collection</label>
+            <input type="text" id="nom" name="nom" required placeholder="Ex : Printemps 2027">
+        </div>
+        <button type="submit" class="bouton" style="width:100%;">Ajouter la collection</button>
+    </form>
+</div>
+{% endblock %}

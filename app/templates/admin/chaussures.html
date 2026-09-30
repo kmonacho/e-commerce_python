@@ -1,0 +1,29 @@
+{% extends "commun/base.html" %}
+{% block titre %}Administration - Chaussures{% endblock %}
+{% block contenu %}
+<h1>Gestion des chaussures</h1>
+{% include "admin/menu.html" %}
+
+<p><a class="bouton" href="{{ url_for('admin.nouvelle_chaussure') }}">+ Ajouter un modele</a></p>
+
+<table class="tableau-donnees">
+    <thead><tr><th>Modele</th><th>Marque</th><th>Genre</th><th>Collection</th><th>Prix</th><th>Actions</th></tr></thead>
+    <tbody>
+        {% for c in chaussures %}
+            <tr>
+                <td>{{ c.modele }}</td>
+                <td>{{ c.nom_marque }}</td>
+                <td>{{ c.genre }}</td>
+                <td>{{ c.nom_collection }}</td>
+                <td>CHF {{ "%.2f"|format(c.prix) }}</td>
+                <td style="display:flex; gap:.4rem;">
+                    <a class="bouton petit secondaire" href="{{ url_for('admin.modifier_chaussure', chaussure_id=c.id) }}">Modifier</a>
+                    <a class="bouton petit secondaire" href="{{ url_for('admin.gerer_tailles', chaussure_id=c.id) }}">Tailles</a>
+                    <a class="bouton petit danger" href="{{ url_for('admin.supprimer_chaussure', chaussure_id=c.id) }}"
+                       onclick="return confirm('Supprimer ce modele ?');">Supprimer</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
